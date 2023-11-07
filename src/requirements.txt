@@ -1,6 +1,6 @@
 streamlit
 spotlight
 scikit-learn
-chardet
-urllib3
-h5py
+#chardet
+#urllib3
+#h5py
