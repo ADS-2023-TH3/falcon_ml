@@ -28,7 +28,7 @@ docker run -it -p 5000:5000 -v $(pwd):/home/user/falcon_ml falcon-dev
 
 The ```-v``` flag is used to mount the current directory to the docker container. This means that any changes you make to the code will be reflected in the container.
 
-If you want to use git from the repo make sure your credentials are properly set up. You can do this by running the following commands:
+If you want to use git from the container make sure your credentials are properly set up. You can do this by running the following commands:
 ```
 git config --global user.name "Your Name"
 ```
