@@ -1,18 +1,40 @@
 import streamlit as st
-import spotlight as sl 
-#from your_recommender_module import get_recommendations  # Import your recommender function
+import pandas as pd
 
-# Streamlit app code
-st.title('Movie Recommender App')
+def main():
+    st.title('Movie Recommender')
+    movies = [
+        "The Shawshank Redemption",
+        "The Godfather",
+        "The Dark Knight",
+        "Pulp Fiction",
+        "Schindler's List",
+        "The Lord of the Rings: The Return of the King",
+        "Forrest Gump",
+        "Inception",
+        "Star Wars: Episode V - The Empire Strikes Back",
+        "The Matrix",
+        "The Silence of the Lambs",
+        "Fight Club",
+        "Gladiator",
+        "The Avengers",
+        "Titanic",
+        "Jurassic Park",
+        "Avatar",
+        "The Lion King",
+        "E.T. the Extra-Terrestrial",
+        "The Terminator"
+    ]
 
-# User input for movie title
-user_movie_title = st.text_input('Enter a movie title:')
+    selected_items=st.multiselect("Choose Movies",movies)
+    if st.button("Recommend movies"):
+        df = pd.DataFrame(movies[:5], columns=["Movie Title"])
+        st.dataframe(df)
 
-if user_movie_title:
-    # Get recommendations based on user input
-    #recommendations = get_recommendations(user_movie_title)
-    
-    # Display recommendations to the user
-    st.subheader('Top 5 Recommendations:')
-    #for idx, movie in enumerate(recommendations[:5]):
-    #    st.write(f'{idx + 1}. {movie}')
+if __name__ == '__main__':
+    main()
+
+
+
+
+
