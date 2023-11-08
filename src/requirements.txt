@@ -1,6 +1,9 @@
 streamlit
 spotlight
 scikit-learn
+uvicorn
+httpx
+starlette
 #chardet
 #urllib3
 #h5py
