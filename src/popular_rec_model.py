@@ -90,6 +90,6 @@ def from_id_to_title(recommended_items, df):
     Returns:
     list: A list of recommended movie titles.
     '''
-    result_df = df[df['item_ids'].isin(listaa)]
+    result_df = df[df['item_ids'].isin(recommended_items)]
     result_df = result_df.sort_values(by=['item_ids'], key=lambda x: x.map({v: i for i, v in enumerate(recommended_items)}))
     return list(result_df['title'].unique())
