@@ -41,7 +41,11 @@ pip install -r requirements.txt
   ```
   streamlit run app.py
   ```
+  uvicorn asgi:application
+  ```
 
+- Uvicorn server:
+  ``
 4. Open the web app in your browser: [http://localhost:5000](http://localhost:5000)
 
 ## Contributing
