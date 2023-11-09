@@ -26,10 +26,24 @@ def main():
         "The Terminator"
     ]
 
-    selected_items=st.multiselect("Choose Movies",movies)
-    if st.button("Recommend movies"):
-        df = pd.DataFrame(movies[:5], columns=["Movie Title"])
-        st.dataframe(df)
+    genres = ['','Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy',
+                  'Film-Noir', 'Horror', 'IMAX', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War',
+                  'Western']
+
+
+
+    with st.form("my_form"):
+        st.write("Inside the form")
+        selected_movies=st.multiselect("Choose Movies",movies)
+        selected_genre=st.selectbox("Genre",genres)
+        # Every form must have a submit button.
+        submitted=st.form_submit_button("Submit")
+        if submitted:
+            st.write("slider", selected_movies, "checkbox", selected_genre)
+            df = pd.DataFrame(movies[:5], columns=["Movie Title"])
+            st.dataframe(df)
+
+    st.write('outside')
 
 if __name__ == '__main__':
     main()
