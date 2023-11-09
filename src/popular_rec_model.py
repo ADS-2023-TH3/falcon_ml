@@ -2,7 +2,6 @@
 
 from spotlight.datasets.movielens import get_movielens_dataset
 import pandas as pd
-import pickle
 
 def get_merge_data():
     """
