@@ -3,28 +3,10 @@ import pandas as pd
 
 def main():
     st.title('Movie Recommender')
-    movies = [
-        "The Shawshank Redemption",
-        "The Godfather",
-        "The Dark Knight",
-        "Pulp Fiction",
-        "Schindler's List",
-        "The Lord of the Rings: The Return of the King",
-        "Forrest Gump",
-        "Inception",
-        "Star Wars: Episode V - The Empire Strikes Back",
-        "The Matrix",
-        "The Silence of the Lambs",
-        "Fight Club",
-        "Gladiator",
-        "The Avengers",
-        "Titanic",
-        "Jurassic Park",
-        "Avatar",
-        "The Lion King",
-        "E.T. the Extra-Terrestrial",
-        "The Terminator"
-    ]
+    data = pd.read_csv('../Data/title_films.csv')
+    movies=data['Title'].values
+
+    
 
     genres = ['','Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy',
                   'Film-Noir', 'Horror', 'IMAX', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War',
