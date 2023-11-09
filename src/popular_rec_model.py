@@ -2,6 +2,7 @@
 
 from spotlight.datasets.movielens import get_movielens_dataset
 import pandas as pd
+import pickle
 
 def get_merge_data():
     """
@@ -93,3 +94,15 @@ def from_id_to_title(recommended_items, df):
     result_df = df[df['item_ids'].isin(recommended_items)]
     result_df = result_df.sort_values(by=['item_ids'], key=lambda x: x.map({v: i for i, v in enumerate(recommended_items)}))
     return list(result_df['title'].unique())
+
+
+# Train the model and store it
+
+# Get data
+df = get_merge_data()
+# Train the model
+model = TopPopRecommender()
+model.fit(df)
+# Store it
+with open('../trained_models/popular_rec_model.pkl', 'wb') as file:
+    pickle.dump(model, file)
