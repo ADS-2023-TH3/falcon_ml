@@ -37,15 +37,14 @@ pip install -r requirements.txt
 ```
 
 3. Run the application:
-- For Flask:
-  ```
-  python app.py
-  ```
 - For Streamlit:
   ```
   streamlit run app.py
-  ```
 
+- Uvicorn server:
+  ```
+  uvicorn asgi:application
+  ```
 4. Open the web app in your browser: [http://localhost:5000](http://localhost:5000)
 
 ## Contributing
