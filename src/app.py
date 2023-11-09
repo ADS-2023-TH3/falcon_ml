@@ -21,11 +21,8 @@ def main():
         # Every form must have a submit button.
         submitted=st.form_submit_button("Submit")
         if submitted:
-            st.write("slider", selected_movies, "checkbox", selected_genre)
             df = pd.DataFrame(movies[:5], columns=["Movie Title"])
             st.dataframe(df)
-
-    st.write('outside')
 
 if __name__ == '__main__':
     main()
