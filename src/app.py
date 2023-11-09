@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-
+from popular_rec_model import *
+import pickle
 def main():
     st.title('Movie Recommender')
     data = pd.read_csv('../Data/title_films.csv')
@@ -11,8 +12,6 @@ def main():
     genres = ['','Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy',
                   'Film-Noir', 'Horror', 'IMAX', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War',
                   'Western']
-
-
 
     with st.form("my_form"):
         st.write("Inside the form")
