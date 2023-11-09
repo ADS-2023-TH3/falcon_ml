@@ -1,0 +1,10 @@
+streamlit
+spotlight
+scikit-learn
+uvicorn
+httpx
+starlette
+pandas
+#chardet
+#urllib3
+#h5py
