@@ -1,37 +1,23 @@
 import streamlit as st
 import pandas as pd
-
+from popular_rec_model import *
+import pickle
 def main():
     st.title('Movie Recommender')
-    movies = [
-        "The Shawshank Redemption",
-        "The Godfather",
-        "The Dark Knight",
-        "Pulp Fiction",
-        "Schindler's List",
-        "The Lord of the Rings: The Return of the King",
-        "Forrest Gump",
-        "Inception",
-        "Star Wars: Episode V - The Empire Strikes Back",
-        "The Matrix",
-        "The Silence of the Lambs",
-        "Fight Club",
-        "Gladiator",
-        "The Avengers",
-        "Titanic",
-        "Jurassic Park",
-        "Avatar",
-        "The Lion King",
-        "E.T. the Extra-Terrestrial",
-        "The Terminator"
-    ]
+    data = pd.read_csv('../Data/title_films.csv')
+    movies=data['title'].values
+
+    
 
     genres = ['','Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy',
                   'Film-Noir', 'Horror', 'IMAX', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War',
                   'Western']
 
-
-
+    print('eeeee')
+    # Load the model from the saved file
+    #with open('../trained_models/popular_rec_model.pkl', 'rb') as file:
+        #popul_model = pickle.load(file)
+    print('ssasdadefsd')
     with st.form("my_form"):
         st.write("Inside the form")
         selected_movies=st.multiselect("Choose Movies",movies)
@@ -39,11 +25,13 @@ def main():
         # Every form must have a submit button.
         submitted=st.form_submit_button("Submit")
         if submitted:
-            st.write("slider", selected_movies, "checkbox", selected_genre)
-            df = pd.DataFrame(movies[:5], columns=["Movie Title"])
-            st.dataframe(df)
-
-    st.write('outside')
+            if (len(selected_movies)==0):
+                movie_id_recommendations = popul_model.predict(genre = selected_genre)
+                recommendations = from_id_to_title(movie_id_recommendations,data)
+                st.table(recommendations)
+            else:  
+                df = pd.DataFrame(movies[-5:], columns=["Movie Title"])
+                st.dataframe(df)
 
 if __name__ == '__main__':
     main()
