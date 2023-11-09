@@ -5,7 +5,7 @@ import pickle
 def main():
     st.title('Movie Recommender')
     data = pd.read_csv('../Data/title_films.csv')
-    movies=data['Title'].values
+    movies=data['title'].values
 
     
 
@@ -14,7 +14,7 @@ def main():
                   'Western']
     # Load the model from the saved file
     with open('../trained_models/popular_rec_model.pkl', 'rb') as file:
-        popul_model = pickle.load(file)
+        popul_model = pd.read_pickle(file)
     with st.form("my_form"):
         st.write("Inside the form")
         selected_movies=st.multiselect("Choose Movies",movies)
