@@ -13,11 +13,6 @@ def main():
                   'Film-Noir', 'Horror', 'IMAX', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War',
                   'Western']
 
-    print('eeeee')
-    # Load the model from the saved file
-    #with open('../trained_models/popular_rec_model.pkl', 'rb') as file:
-        #popul_model = pickle.load(file)
-    print('ssasdadefsd')
     with st.form("my_form"):
         st.write("Inside the form")
         selected_movies=st.multiselect("Choose Movies",movies)
