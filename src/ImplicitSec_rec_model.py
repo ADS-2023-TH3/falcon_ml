@@ -66,7 +66,7 @@ def train_ImplicitSec_model(train, model_type = 'cnn', save_model = True):
                                   loss='bpr')
     model.fit(train)
     if save_model: 
-        torch.save(model, 'trained_models/ImplicitSec_rec_model.pth')
+        torch.save(model, '../trained_models/ImplicitSec_rec_model.pth')
     
     return model 
 
