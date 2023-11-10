@@ -1,6 +1,6 @@
 import pickle
 from popular_rec_model import *
-
+from ImplicitSec_rec_model import *
 
 #-----------------------------------------------------------------------------------
 #-----------------------Popular recommender trainng---------------------------------
@@ -19,3 +19,7 @@ with open('../trained_models/popular_rec_model.pkl', 'wb') as file:
 #-----------------------------------------------------------------------------------
 #-----------------------Spotlight recommender trainng---------------------------------
 #-----------------------------------------------------------------------------------
+
+# Initialize and train the Implicit Sequencial model
+df_s = load_data_to_sequences()
+model_s = train_ImplicitSec_model(df_s)
