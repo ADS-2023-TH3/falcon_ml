@@ -1,5 +1,4 @@
 streamlit
-#spotlight
 scikit-learn
 uvicorn
 httpx
@@ -8,3 +7,4 @@ pandas
 chardet
 urllib3
 h5py
+torch
