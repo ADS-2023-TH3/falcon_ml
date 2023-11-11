@@ -10,7 +10,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install dependencies from apt
 RUN apt-get update && apt update && apt upgrade -y && apt-get clean
-RUN apt install -y vim git unzip 
+RUN apt install -y git
 
 # Install python 3.9
 RUN apt-get update && apt install software-properties-common -y
@@ -31,8 +31,11 @@ RUN git clone https://github.com/maciejkula/spotlight.git \
     && python3 setup.py build \
     && python3 setup.py install
 
-# Expose the port your application will run on 
-EXPOSE 80
+# Make port 8501 available to the world outside this container
+EXPOSE 8501
+
+# Define environment variables
+ENV STREAMLIT_SERVER_PORT=8501
 
 # Install other dependencies
 RUN apt-get update && apt update && apt upgrade -y && apt-get clean
