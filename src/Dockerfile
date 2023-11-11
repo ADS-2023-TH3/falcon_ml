@@ -13,8 +13,6 @@ COPY requirements.txt .
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
-RUN pip install torch
-
 # Install python 3.9
 RUN apt-get update && apt install software-properties-common -y
 RUN add-apt-repository ppa:deadsnakes/ppa -y
