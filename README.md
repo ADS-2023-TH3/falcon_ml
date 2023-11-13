@@ -20,7 +20,7 @@ Welcome to our Movie Recommender Web App! This web application allows users to i
 
 - **Backend:** Python, Streamlit 
 - **Frontend:** HTML, CSS, JavaScript 
-- **Data Science:** 
+- **Data Science:** Pytorch, Scikit-learn, Pandas 
 
 ## Setup Instructions
 
