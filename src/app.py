@@ -26,27 +26,27 @@ def main():
     imp_sec_model = torch.load('../trained_models/ImplicitSec_rec_model.pth')
 
     
-    """What comes next is a form. A form is a set of input elements and a submit button.
-    When you click submit the form will return selected movies and genre and will run the code 
-    to give a recommendation according to the input data."""
+    #What comes next is a form. A form is a set of input elements and a submit button.
+    #When you click submit the form will return selected movies and genre and will run the code
+    #to give a recommendation according to the input data.
     with st.form("my_form"):
         selected_movies=st.multiselect("Choose Movies",movies)
         selected_genre=st.selectbox("Genre",genres)
 
-        """We have to change the blank space for None for the models to work correctly"""
+        #We have to change the blank space for None for the models to work correctly
         if selected_genre=='':
             selected_genre=None
         #submit button.
         submitted=st.form_submit_button("Submit")
 
-        """The following logic structure selects the model to use.
-            1. The user selcts movies --> General model
-            2. No movies:
-                2.1 Genre selected --> popular recomender
-                2.2 No Genre --> Our recommendations
-                
-            There are a series of transformations from movie to movie id and viceversa for the 
-            inputs/outputs to work correctly"""
+
+        #The following logic structure selects the model to use.
+            #1. The user selcts movies --> General model
+            #2. No movies:
+                #2.1 Genre selected --> popular recomender
+                #2.2 No Genre --> Our recommendations
+            #There are a series of transformations from movie to movie id and viceversa for the
+            #inputs/outputs to work correctly
         if submitted:
             if (len(selected_movies)==0):
                 if selected_genre==None:
