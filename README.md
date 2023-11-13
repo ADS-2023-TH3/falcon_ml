@@ -1,6 +1,7 @@
 # Movie Recommender Web App
 
-![App Demo](link-to-demo-gif-or-screenshot)
+<img width="901" alt="Captura de pantalla 2023-11-13 a las 23 26 35" src="https://github.com/ADS-2023-TH3/falcon_ml/assets/114001733/bd2aabd3-4160-48bd-b656-ee3fb1f1e4b6">
+
 
 Welcome to our Movie Recommender Web App! This web application allows users to input a movie title and receive personalized movie recommendations based on our advanced recommendation algorithm. It's powered by cutting-edge data science techniques, making your movie-watching experience even better!
 
