@@ -41,4 +41,4 @@ ENV STREAMLIT_SERVER_PORT=8501
 RUN apt-get update && apt update && apt upgrade -y && apt-get clean
 
 # Run the application
-CMD ["streamlit", "run", "falcon_ml/src/app.py"]
+CMD ["streamlit", "run", "falcon_ml/app.py"]

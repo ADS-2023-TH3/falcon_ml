@@ -10,7 +10,7 @@ def main():
 
     # First we read the data and get the list of movies, we will need it to desplay in the select box
     # We also define the list of Genres
-    data = pd.read_csv('../Data/title_films.csv')
+    data = pd.read_csv('/Data/title_films.csv')
     movies = data['title'].values
     genres = ['', 'Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy',
               'Film-Noir', 'Horror', 'IMAX', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War',
