@@ -38,9 +38,11 @@ def main():
                     recommendations = from_id_to_title(movie_id_recommendations, data)
                 st.table(recommendations)
             else:
+                # Read movies.csv file for predictions
+                genres_df = pd.read_csv('/falcon_ml/Data/movies.csv')
                 input_movies_ids = data.loc[data['title'].isin(selected_movies), 'item_ids'].values
                 movie_id_recommendations = predict(model=imp_sec_model, input_movie_ids=input_movies_ids,
-                                                   genre=selected_genre)
+                                                   genres_df = genres_df,genre=selected_genre)
                 recommendations = from_id_to_title(movie_id_recommendations, data)
                 st.table(recommendations)
 

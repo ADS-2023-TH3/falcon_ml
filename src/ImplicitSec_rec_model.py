@@ -85,7 +85,7 @@ def evaluate_model(test, model):
     
     return mrr
 
-def predict(model, input_movie_ids, genre = None):
+def predict(model, input_movie_ids, genres_df, genre = None):
     """Given an specific array of input movies, 
         this function returns a prediction of the top 5 movies rated 
         as a result of the item-to-item recommender system
@@ -96,6 +96,9 @@ def predict(model, input_movie_ids, genre = None):
         model (spotlight.sequence.implicit.ImplicitSequenceModel): already trained model
         input_movie_ids (np.array): list of input movies from which the top 5 movies are
                                     recommended
+        genres_df (pd.DataFrame): Dataframe with movie_id and genre
+                                    genres_df = pd.read_csv('../Data/movies.csv')
+
         genre: None by default. When a genre is given, it filters the output so the 
                 top 5 movies recommended are from that genre. If none, no filter 
                 is applied to the output.
@@ -116,7 +119,6 @@ def predict(model, input_movie_ids, genre = None):
     movies_ratings = movies_ratings.sort_values( by = ['ratings'], ascending = False )
     
      # Download movielens dataset to add genres
-    genres_df = pd.read_csv('../Data/movies.csv')
     genres_df = genres_df.rename(columns={'movieId': 'item_ids'})
     # Merge dataframes by item_ids
     movies_ratings_genres = pd.merge(movies_ratings, genres_df, on='item_ids')
