@@ -25,28 +25,25 @@ Welcome to our Movie Recommender Web App! This web application allows users to i
 
 ## Setup Instructions
 
-1. Clone the repository:
+1. Download the [Dockerfile](https://github.com/ADS-2023-TH3/falcon_ml/blob/main/Dockerfile). Or clone the repository:
 
 ```
-git clone https://github.com/ADS-2023-TH3/falcon_ml.git
+git clone https://github.com/ADS-2023-TH3/falcon_ml.git && cd falcon_ml
 ```
 
-2. Install dependencies:
+2. Build the Docker image:
 
 ```
-pip install -r requirements.txt
+docker build --no-cache -t falcon .
 ```
 
-3. Run the application:
-- For Streamlit:
-  ```
-  streamlit run app.py
+3. Run the Docker image at port 8501:
 
-- Uvicorn server:
-  ```
-  uvicorn asgi:application
-  ```
-4. Open the web app in your browser: [http://localhost:5000](http://localhost:5000)
+```
+docker run --rm -p 8501:8501 falcon
+```
+
+4. Open the web app in your browser: [http://localhost:8501](http://localhost:8501)
 
 ## Contributing
 
