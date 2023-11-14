@@ -1,16 +1,18 @@
+import sys
+sys.path.append('src')
+
 import streamlit as st
 import pandas as pd
-from src.popular_rec_model import *
-from src.ImplicitSec_rec_model import *
+from popular_rec_model import *
+from ImplicitSec_rec_model import *
 import torch
-
 
 def main():
     st.title('Movie Recommender')
 
     # First we read the data and get the list of movies, we will need it to desplay in the select box
     # We also define the list of Genres
-    data = pd.read_csv('Data/title_films.csv')
+    data = pd.read_csv('/Data/title_films.csv')
     movies = data['title'].values
     genres = ['', 'Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy',
               'Film-Noir', 'Horror', 'IMAX', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War',
@@ -18,11 +20,11 @@ def main():
 
     # load the models
     # popular recommender
-    with open('trained_models/popular_rec_model.pkl', 'rb') as file:
+    with open('/trained_models/popular_rec_model.pkl', 'rb') as file:
         popul_model = pd.read_pickle(file)
 
     # General model
-    imp_sec_model = torch.load('trained_models/ImplicitSec_rec_model.pth')
+    imp_sec_model = torch.load('/trained_models/ImplicitSec_rec_model.pth')
 
     # What comes next is a form. A form is a set of input elements and a submit button.
     # When you click submit the form will return selected movies and genre and will run the code
