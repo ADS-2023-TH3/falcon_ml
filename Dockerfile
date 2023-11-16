@@ -1,6 +1,6 @@
 # Dockerfile for the deployment of the falcon_ml project
 # docker build -t falcon-deploy .
-# docker run -it -p 5000:5000 --name falcon-deploy falcon-deploy
+# docker run --rm -p 8501:8501 --name falcon-deploy falcon-deploy
 
 FROM ubuntu:22.04
 

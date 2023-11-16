@@ -34,13 +34,13 @@ git clone https://github.com/ADS-2023-TH3/falcon_ml.git && cd falcon_ml
 2. Build the Docker image:
 
 ```
-docker build --no-cache -t falcon .
+docker build --no-cache -t falcon-deploy .
 ```
 
 3. Run the Docker image at port 8501:
 
 ```
-docker run --rm -p 8501:8501 falcon
+docker run --rm -p 8501:8501 --name falcon-deploy falcon-deploy
 ```
 
 4. Open the web app in your browser: [http://localhost:8501](http://localhost:8501)
