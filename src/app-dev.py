@@ -34,12 +34,17 @@ def main():
                     recommendations = ['Pulp Fiction (1994)','Green Book (2018)',
                                        'Inception (2010)', 'The Godfather (1972)', 'Kill Bill: Vol. 1 (2003)']
                 else:
+                    # Popular recommender
                     movie_id_recommendations = popul_model.predict(genre=selected_genre, at=5)
                     recommendations = from_id_to_title(movie_id_recommendations, data)
                 st.table(recommendations)
             else:
-                # Read movies.csv file for predictions
-                input_movies_ids = data.loc[data['title'].isin(selected_movies), 'item_ids'].values
+                # Spotlight recommender
+                # Convert title to item_id
+                titles_df = pd.DataFrame({'title': selected_movies})
+                result_df = pd.merge(titles_df, data, on='title', how='left')
+                input_movies_ids = result_df['item_ids'].values
+                # Give the prediction
                 movie_id_recommendations = predict(model=imp_sec_model, input_movie_ids=input_movies_ids,
                                                    genres_df = data,genre=selected_genre,at=5)
                 recommendations = from_id_to_title(movie_id_recommendations, data)
