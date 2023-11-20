@@ -85,7 +85,7 @@ def evaluate_model(test, model):
     
     return mrr
 
-def predict(model, input_movie_ids, genres_df, genre = None):
+def predict(model, input_movie_ids, genres_df, genre = None,  at = 5):
     """Given an specific array of input movies, 
         this function returns a prediction of the top 5 movies rated 
         as a result of the item-to-item recommender system
@@ -122,9 +122,9 @@ def predict(model, input_movie_ids, genres_df, genre = None):
     movies_ratings_genres = pd.merge(movies_ratings, genres_df, on='item_ids')
     
     if genre == None: 
-        recommended = movies_ratings_genres[:5]
+        recommended = movies_ratings_genres[0:at]
     else:
         recommended = movies_ratings_genres[movies_ratings_genres['genres'] == genre]
-        recommended = recommended[:5]
+        recommended = recommended[0:at]
     
     return recommended.item_ids 

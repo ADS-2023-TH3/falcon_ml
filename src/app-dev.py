@@ -29,16 +29,19 @@ def main():
         if submitted:
             if (len(selected_movies) == 0):
                 if selected_genre == None:
-                    recommendations = movies[:5]
+                    # If no movie and no genre selected. We give the 5 films that falcons team like the most
+                    st.text("No movies and no genre selected. Here are our 5 favorite movies")
+                    recommendations = ['Pulp Fiction (1994)','Green Book (2018)',
+                                       'Inception (2010)', 'The Godfather (1972)', 'Kill Bill: Vol. 1 (2003)']
                 else:
-                    movie_id_recommendations = popul_model.predict(genre=selected_genre)
+                    movie_id_recommendations = popul_model.predict(genre=selected_genre, at=5)
                     recommendations = from_id_to_title(movie_id_recommendations, data)
                 st.table(recommendations)
             else:
                 # Read movies.csv file for predictions
                 input_movies_ids = data.loc[data['title'].isin(selected_movies), 'item_ids'].values
                 movie_id_recommendations = predict(model=imp_sec_model, input_movie_ids=input_movies_ids,
-                                                   genres_df = data,genre=selected_genre)
+                                                   genres_df = data,genre=selected_genre,at=5)
                 recommendations = from_id_to_title(movie_id_recommendations, data)
                 st.table(recommendations)
 
