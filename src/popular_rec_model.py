@@ -25,7 +25,6 @@ def get_merge_data():
 
     # Download movielens dataset to add genres
     genres_df = pd.read_csv('../Data/movies.csv')
-    genres_df = genres_df.rename(columns={'movieId': 'item_ids'})
 
     # Merge dataframes by item_ids
     df = pd.merge(df,genres_df,on='item_ids')

@@ -39,7 +39,7 @@ def main():
                 st.table(recommendations)
             else:
                 # Read movies.csv file for predictions
-                input_movies_ids = data.loc[data['title'].isin(selected_movies), 'movieId'].values
+                input_movies_ids = data.loc[data['title'].isin(selected_movies), 'item_ids'].values
                 movie_id_recommendations = predict(model=imp_sec_model, input_movie_ids=input_movies_ids,
                                                    genres_df = data,genre=selected_genre)
                 recommendations = from_id_to_title(movie_id_recommendations, data)

@@ -117,9 +117,7 @@ def predict(model, input_movie_ids, genres_df, genre = None):
         'ratings': predict_ 
     })
     movies_ratings = movies_ratings.sort_values( by = ['ratings'], ascending = False )
-    
-     # Download movielens dataset to add genres
-    genres_df = genres_df.rename(columns={'movieId': 'item_ids'})
+
     # Merge dataframes by item_ids
     movies_ratings_genres = pd.merge(movies_ratings, genres_df, on='item_ids')
     

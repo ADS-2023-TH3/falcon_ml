@@ -7,16 +7,16 @@ import torch
 def main():
     st.title('Movie Recommender')
 
-    data = pd.read_csv('/falcon_ml/Data/movies.csv')
+    data = pd.read_csv('../Data/movies.csv')
     movies = data['title'].values
     genres = ['', 'Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy',
               'Film-Noir', 'Horror', 'IMAX', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War',
               'Western']
 
-    with open('/falcon_ml/trained_models/popular_rec_model.pkl', 'rb') as file:
+    with open('../trained_models/popular_rec_model.pkl', 'rb') as file:
         popul_model = pd.read_pickle(file)
 
-    imp_sec_model = torch.load('/falcon_ml/trained_models/ImplicitSec_rec_model.pth')
+    imp_sec_model = torch.load('../trained_models/ImplicitSec_rec_model.pth')
 
     with st.form("my_form"):
         selected_movies = st.multiselect("Choose Movies", movies)
@@ -36,7 +36,7 @@ def main():
                 st.table(recommendations)
             else:
                 # Read movies.csv file for predictions
-                input_movies_ids = data.loc[data['title'].isin(selected_movies), 'movieId'].values
+                input_movies_ids = data.loc[data['title'].isin(selected_movies), 'item_ids'].values
                 movie_id_recommendations = predict(model=imp_sec_model, input_movie_ids=input_movies_ids,
                                                    genres_df = data,genre=selected_genre)
                 recommendations = from_id_to_title(movie_id_recommendations, data)
