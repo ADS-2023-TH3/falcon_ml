@@ -121,10 +121,16 @@ def predict(model, input_movie_ids, genres_df, genre = None,  at = 5):
     # Merge dataframes by item_ids
     movies_ratings_genres = pd.merge(movies_ratings, genres_df, on='item_ids')
     
-    if genre == None: 
-        recommended = movies_ratings_genres[0:at]
-    else:
-        recommended = movies_ratings_genres[movies_ratings_genres['genres'] == genre]
-        recommended = recommended[0:at]
-    
+    if len(movies_ratings_genres) >= at:
+        if genre == None: 
+            recommended = movies_ratings_genres[0:at]
+        else:
+            recommended = movies_ratings_genres[movies_ratings_genres['genres'] == genre]
+            recommended = recommended[0:at]
+    else: 
+        if genre == None: 
+            recommended = movies_ratings_genres
+        else:
+            recommended = movies_ratings_genres[movies_ratings_genres['genres'] == genre]
+               
     return recommended.item_ids 
