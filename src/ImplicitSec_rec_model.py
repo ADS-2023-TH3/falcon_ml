@@ -120,6 +120,7 @@ def predict(model, input_movie_ids, genres_df, genre = None,  at = 5):
         'ratings': predict_ 
     })
     movies_ratings = movies_ratings.sort_values( by = ['ratings'], ascending = False )
+    movies_ratings = movies_ratings[~movies_ratings.item_ids.isin(input_movie_ids)]
 
     # Merge dataframes by item_ids
     movies_ratings_genres = pd.merge(movies_ratings, genres_df, on='item_ids')
