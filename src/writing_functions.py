@@ -45,12 +45,12 @@ def add_log(user, input, output):
     worksheet=connect_to_sheet('logs_sheet')
     data = {
     "user": [user],
-    "date": [dt.now().strftime("%Y-%m-%d")],
+    "date": [dt.datetime.now().strftime("%Y-%m-%d")],
     "input": [input],
     "output": [output]
     }
     df = pd.DataFrame(data)
-    set_with_dataframe(worksheet, df, col=1,row=len(worksheet.get_all_records()) + 2,include_column_header=False)
+    set_with_dataframe(worksheet, df, col=1,row=len(worksheet.get_all_records()) + 2 ,include_column_header=False)
 
 
 
