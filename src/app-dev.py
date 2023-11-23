@@ -3,11 +3,14 @@ import pandas as pd
 from popular_rec_model import *
 from ImplicitSec_rec_model import *
 import torch
+import hashlib
 
 def main():
     st.title('Movie Recommender') 
-
-    success = False
+        
+    # Initialize session state
+    if 'success' not in st.session_state:
+        st.session_state.success = False
 
     # Login form
     # TODO: improve it with https://blog.jcharistech.com/2020/05/30/how-to-add-a-login-section-to-streamlit-blog-app/
@@ -20,11 +23,14 @@ def main():
         if submitted:
             if username == "falcon" and password == "falcon":
                 st.success("Logged in as falcon")
-                success = True
+                st.session_state.success = True
+                st.session_state.username = username
+                st.session_state.password = password
             else:
                 st.error("Incorrect username or password")
+                st.session_state.success = False
                 
-    if success:
+    if st.session_state.success:
         data = pd.read_csv('../Data/movies.csv')
         movies = data['title'].values
         genres = ['', 'Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy',
@@ -36,7 +42,6 @@ def main():
 
         imp_sec_model = torch.load('../trained_models/ImplicitSec_rec_model.pth')      
 
-        # Initialize session state
         if 'times_visualized' not in st.session_state:
             st.session_state.times_visualized = 0
         if 'recommendations' not in st.session_state:
