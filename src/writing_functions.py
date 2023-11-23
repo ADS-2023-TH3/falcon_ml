@@ -3,6 +3,9 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 from gspread_dataframe import set_with_dataframe
+
+
+"""The following function will connect to a specific sheet of the data workbook"""
 def connect_to_sheet(worksheet_name):
     # Define the scope and credentials
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -39,7 +42,8 @@ def Sheet_to_df(worksheet):
     else:
         return None
     
-
+"""The following functions will connect to a specific sheet of the data workbook and add a line at the end 
+of those sheets"""
     
 def add_log(user, input, output):
     worksheet=connect_to_sheet('logs_sheet')
@@ -52,6 +56,24 @@ def add_log(user, input, output):
     df = pd.DataFrame(data)
     set_with_dataframe(worksheet, df, col=1,row=len(worksheet.get_all_records()) + 2 ,include_column_header=False)
 
+def add_user(user, hash):
+    worksheet=connect_to_sheet('users_sheet')
+    data = {
+    "user": [user],
+    "hash": [hash],
+    }
+    df = pd.DataFrame(data)
+    set_with_dataframe(worksheet, df, col=1,row=len(worksheet.get_all_records()) + 2 ,include_column_header=False)
 
 
-add_log('Arturo','in','out')
+def add_rating(user, movie, rating):
+    worksheet=connect_to_sheet('feedback_sheet')
+    data = {
+    "user": [user],
+    "hash": [movie],
+    "rating":[rating]
+    }
+    df = pd.DataFrame(data)
+    set_with_dataframe(worksheet, df, col=1,row=len(worksheet.get_all_records()) + 2 ,include_column_header=False)
+
+add_rating('Arturo','Estoriboris','10')
