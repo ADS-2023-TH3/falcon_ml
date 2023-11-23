@@ -5,6 +5,7 @@ from ImplicitSec_rec_model import *
 import torch
 
 def main():
+    # Set page title and initialize session state ------------------------------------------------
     st.title('Movie Recommender') 
 
     data = pd.read_csv('../Data/movies.csv')
@@ -28,6 +29,7 @@ def main():
     if 'ratings' not in st.session_state:
         st.session_state.ratings = {}
 
+    # Preferences form ---------------------------------------------------------------------------
     with st.form("my_form"):
         selected_movies = st.multiselect("Choose Movies", movies)
         selected_genre = st.selectbox("Genre", genres)
@@ -60,13 +62,21 @@ def main():
                 # Give the prediction
                 movie_id_recommendations = predict(model=imp_sec_model, input_movie_ids=input_movies_ids,
                                                    genres_df = data,genre=selected_genre,at=100)
-                
-                st.session_state.recommendations = from_id_to_title(movie_id_recommendations, data)
-
+                if len(movie_id_recommendations) == 0:
+                    st.session_state.recommendations = ["There are no available recommendations for the selected preferences"]
+                else:
+                    st.session_state.recommendations = from_id_to_title(movie_id_recommendations, data)
+    # --------------------------------------------------------------------------------------------
+    # Display output -----------------------------------------------------------------------------
     if len(st.session_state.recommendations) > 0:   # Display recommendations obtained from the form
         st.subheader("Top 5 movies for your preferences")
-        display_movies_with_sliders(st.session_state.recommendations[0:5])
+        if st.session_state.recommendations[0] == "There are no available recommendations for the selected preferences":
+            st.text("There are no available recommendations for the selected preferences")
+        else:
+            display_movies_with_sliders(st.session_state.recommendations[0:5])
+    # --------------------------------------------------------------------------------------------
 
+    # More recommendations form ------------------------------------------------------------------
     if len(st.session_state.recommendations)-5 > 0:   # The recommendations are more than 5
         with st.form("more_recommendations_form"):
             st.subheader('More recommendations for the same preferences')
@@ -84,12 +94,11 @@ def main():
                 else:
                     st.session_state.more_recommendations = []
                     st.text("There are no more recommendations. Please select new movies or a new genre")
-
+    # --------------------------------------------------------------------------------------------
+    # Display output -----------------------------------------------------------------------------
     if len(st.session_state.more_recommendations) > 0:   # Display more recommendations obtained from the form
         display_movies_with_sliders(st.session_state.more_recommendations)
-
-    print(st.session_state.ratings)
-    
+    # --------------------------------------------------------------------------------------------
 
 def display_movies_with_sliders(movies):
     # Display movies in a table with sliders for ratings using st.beta_columns

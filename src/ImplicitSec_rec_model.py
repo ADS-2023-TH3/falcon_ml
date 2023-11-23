@@ -110,7 +110,10 @@ def predict(model, input_movie_ids, genres_df, genre = None,  at = 5):
     ## Here we can consider the option of merging the dataset before predict function
     ## And modify the predict function so the input is already the filtered dataset
     
-    predict_ = model.predict(sequences = input_movie_ids)
+    try:
+        predict_ = model.predict(sequences = input_movie_ids)
+    except:
+        return []
     predicted_item_ids = np.arange(model._num_items).reshape(-1, 1)
     movies_ratings = pd.DataFrame({
         'item_ids': predicted_item_ids.reshape(len(predicted_item_ids)),
