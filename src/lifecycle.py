@@ -96,7 +96,7 @@ with mlflow.start_run():
     model, model_type, n_iter, loss_type = train_ImplicitSec_model(train, model_type='cnn', save_model=True, n_iter=3, loss_type='bpr')
 
     # Evaluate model
-    #mrr = evaluate_model(test, model)
+    mrr = evaluate_model(train, model)
 
     # Log parameters
     mlflow.log_param("model_type", model_type)
@@ -104,7 +104,7 @@ with mlflow.start_run():
     mlflow.log_param("loss_type", loss_type)
 
     # Log metrics
-    #mlflow.log_metric("mrr", mrr)
+    mlflow.log_metric("mrr", mrr)
 
     # Log artifacts (output files)
     #mlflow.pytorch.log_model(model, "models")
