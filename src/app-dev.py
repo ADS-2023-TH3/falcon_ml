@@ -3,7 +3,30 @@ import pandas as pd
 from popular_rec_model import *
 from ImplicitSec_rec_model import *
 import torch
-import hashlib
+
+from oauth2client.service_account import ServiceAccountCredentials
+import gspread
+import json
+
+
+
+
+SCOPES = [
+'https://www.googleapis.com/auth/spreadsheets',
+'https://www.googleapis.com/auth/drive'
+]
+
+CREDENTIALS = ServiceAccountCredentials.from_json_keyfile_name("movierecommender-405816-41309bde9020.json", SCOPES)
+
+GS = gspread.authorize(CREDENTIALS) 
+
+SHEET = GS.open("data")
+
+USERS_WORKSHEET = SHEET.worksheet("users_sheet") 
+
+USERS = USERS_WORKSHEET.col_values(1)
+PASSWORS = USERS_WORKSHEET.col_values(2)
+
 
 def main():
     st.title('Movie Recommender') 
@@ -21,14 +44,19 @@ def main():
         submitted = st.form_submit_button("Login")
 
         if submitted:
-            if username == "falcon" and password == "falcon":
-                st.success("Logged in as falcon")
-                st.session_state.success = True
-                st.session_state.username = username
-                st.session_state.password = password
+            if username in USERS:
+                index = USERS.index(username)
+                if check_hashes(password, PASSWORS[index]):
+                    st.success("Logged in as falcon")
+                    st.session_state.success = True
+                    st.session_state.username = username
+                else: 
+                    st.error("Incorrect username or password")
+                    st.session_state.success = False
             else:
                 st.error("Incorrect username or password")
                 st.session_state.success = False
+
                 
     if st.session_state.success:
         data = pd.read_csv('../Data/movies.csv')
@@ -124,6 +152,17 @@ def display_movies_with_sliders(movies):
             rating = st.slider(f"Share your personal rating", 0, 5, 0, key=f"rating_{movie}")
             if rating > 0:
                 st.session_state.ratings[movie] = rating
+
+
+import hashlib
+def make_hashes(password):
+	return hashlib.sha256(str.encode(password)).hexdigest()
+
+def check_hashes(password,hashed_text):
+	if make_hashes(password) == hashed_text:
+		return True
+	return False
+
 
 if __name__ == '__main__':
     main()
