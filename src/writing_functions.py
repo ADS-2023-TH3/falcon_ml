@@ -67,14 +67,19 @@ def add_user(user, hash):
     set_with_dataframe(worksheet, df, col=1,row=len(worksheet.get_all_records()) + 2 ,include_column_header=False)
 
 
-def add_rating(user, movie, rating):
-    worksheet=connect_to_sheet('feedback_sheet')
-    data = {
-    "user": [user],
-    "hash": [movie],
-    "rating":[rating]
-    }
-    df = pd.DataFrame(data)
-    set_with_dataframe(worksheet, df, col=1,row=len(worksheet.get_all_records()) + 2 ,include_column_header=False)
-
-add_rating('Arturo','Estoriboris','10')
+def add_ratings(user, ratings, user_ratings_indices):
+    feedback_worksheet = connect_to_sheet('feedback_sheet')
+    for movie in ratings:
+        # Check if the user has already rated the movie
+        if movie in user_ratings_indices.keys():
+            # If the user has already rated the movie, update the rating
+            feedback_worksheet.update_cell(user_ratings_indices[movie], 3, ratings[movie])
+        else:
+            # If the user has not rated the movie yet, add a new row with the movie and the rating
+            data = {
+            "USER": [user],
+            "MOVIE": [movie],
+            "RATING":[ratings[movie]]
+            }
+            df = pd.DataFrame(data)
+            set_with_dataframe(feedback_worksheet, df, col=1,row=len(feedback_worksheet.get_all_records()) + 2 ,include_column_header=False)

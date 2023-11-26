@@ -4,28 +4,12 @@ from popular_rec_model import *
 from ImplicitSec_rec_model import *
 import torch
 
-from oauth2client.service_account import ServiceAccountCredentials
-import gspread
-import json
-
-
-
+from writing_functions import *
 
 SCOPES = [
 'https://www.googleapis.com/auth/spreadsheets',
 'https://www.googleapis.com/auth/drive'
 ]
-
-CREDENTIALS = ServiceAccountCredentials.from_json_keyfile_name("movierecommender-405816-41309bde9020.json", SCOPES)
-
-GS = gspread.authorize(CREDENTIALS) 
-
-SHEET = GS.open("data")
-
-USERS_WORKSHEET = SHEET.worksheet("users_sheet") 
-
-USERS = USERS_WORKSHEET.col_values(1)
-PASSWORS = USERS_WORKSHEET.col_values(2)
 
 
 def main():
@@ -44,12 +28,27 @@ def main():
         submitted = st.form_submit_button("Login")
 
         if submitted:
-            if username in USERS:
-                index = USERS.index(username)
-                if check_hashes(password, PASSWORS[index]):
-                    st.success("Logged in as falcon")
-                    st.session_state.success = True
+
+            # Initialize session state
+            st.session_state.times_visualized = 0
+            st.session_state.recommendations = []
+            st.session_state.more_recommendations = []
+            st.session_state.ratings = {}
+
+            # Connect to the users sheet
+            users_worksheet = connect_to_sheet('users_sheet')
+            users = users_worksheet.col_values(1)
+            passwords = users_worksheet.col_values(2)
+
+            if username in users:
+                index = users.index(username)
+                if check_hashes(password, passwords[index]):
+                    # Check if the user has already rated some movies
+                    st.session_state.user_ratings, st.session_state.user_ratings_indices = user_ratings(username)
                     st.session_state.username = username
+                    # Display the welcome message
+                    st.success("Logged in as {}".format(username))
+                    st.session_state.success = True
                 else: 
                     st.error("Incorrect username or password")
                     st.session_state.success = False
@@ -69,15 +68,6 @@ def main():
             popul_model = pd.read_pickle(file)
 
         imp_sec_model = torch.load('../trained_models/ImplicitSec_rec_model.pth')      
-
-        if 'times_visualized' not in st.session_state:
-            st.session_state.times_visualized = 0
-        if 'recommendations' not in st.session_state:
-            st.session_state.recommendations = []
-        if 'more_recommendations' not in st.session_state:
-            st.session_state.more_recommendations = []
-        if 'ratings' not in st.session_state:
-            st.session_state.ratings = {}
 
         with st.form("my_form"):
             selected_movies = st.multiselect("Choose Movies", movies)
@@ -139,7 +129,22 @@ def main():
         if len(st.session_state.more_recommendations) > 0:   # Display more recommendations obtained from the form
             display_movies_with_sliders(st.session_state.more_recommendations)
 
-        print(st.session_state.ratings)
+        print('session_ratings: ', st.session_state.ratings)
+        print('user_ratings: ', st.session_state.user_ratings)
+
+        # If the user has rated some movies submit the ratings to the feedback sheet using a submit button
+        if len(st.session_state.ratings) > 0:
+            with st.form("ratings_form"):
+                submitted_3 = st.form_submit_button("Submit ratings")
+                if submitted_3:
+                    add_ratings(st.session_state.username, st.session_state.ratings, st.session_state.user_ratings_indices)
+                    # Reset ratings
+                    st.session_state.ratings = {}
+                    # Reset user ratings
+                    st.session_state.user_ratings, st.session_state.user_ratings_indices = user_ratings(st.session_state.username)
+                    st.success("Ratings submitted successfully")
+
+            
     
 
 def display_movies_with_sliders(movies):
@@ -152,6 +157,25 @@ def display_movies_with_sliders(movies):
             rating = st.slider(f"Share your personal rating", 0, 5, 0, key=f"rating_{movie}")
             if rating > 0:
                 st.session_state.ratings[movie] = rating
+
+
+
+def user_ratings(username):
+    feedback_worksheet = connect_to_sheet('feedback_sheet')
+    feedback_users = feedback_worksheet.col_values(1)
+    user_ratings_dict = {}
+    if username in feedback_users:
+        #index = feedback_users.index(username)
+        indices = [i+1 for i, x in enumerate(feedback_users) if x == username]
+        # Get the movies and ratings that the user has already rated
+        movies = [feedback_worksheet.row_values(i)[1::2][0] for i in indices]
+        ratings = [feedback_worksheet.row_values(i)[2::2][0] for i in indices]
+        # Create a dictionary with the movies and ratings
+        user_ratings_dict = dict(zip(movies, ratings))
+        # Create a dictionary that keeps track of the indices of the movies
+        user_ratings_dict_indices = dict(zip(movies, indices))
+
+    return user_ratings_dict, user_ratings_dict_indices
 
 
 import hashlib
