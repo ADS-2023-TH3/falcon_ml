@@ -45,13 +45,14 @@ def Sheet_to_df(worksheet):
 """The following functions will connect to a specific sheet of the data workbook and add a line at the end 
 of those sheets"""
     
-def add_log(user, input, output):
+def add_log(user, genre, movies, recommendations):
     worksheet=connect_to_sheet('logs_sheet')
     data = {
     "user": [user],
     "date": [dt.datetime.now().strftime("%Y-%m-%d")],
-    "input": [input],
-    "output": [output]
+    "genre": [genre],
+    "movies": [movies],
+    "recommendations": [recommendations]
     }
     df = pd.DataFrame(data)
     set_with_dataframe(worksheet, df, col=1,row=len(worksheet.get_all_records()) + 2 ,include_column_header=False)
