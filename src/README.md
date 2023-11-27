@@ -21,9 +21,14 @@ Go to the main directory:
 cd ..
 ```
 
-To run the docker image, run the following command:
+To run the docker image, run the following command: </br>
+Ubuntu/Linux:
 ```
 docker run -it -p 5000:5000 -v $(pwd):/home/user/falcon_ml falcon-dev
+```
+For Windows:
+```
+docker run -it -p 5000:5000 -v ${PWD}:/home/user/falcon_ml falcon-dev
 ```
 
 The ```-v``` flag is used to mount the current directory to the docker container. This means that any changes you make to the code will be reflected in the container.

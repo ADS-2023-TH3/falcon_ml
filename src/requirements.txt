@@ -8,3 +8,8 @@ chardet
 urllib3
 h5py
 torch
+oauth2client
+PyOpenSSL
+gspread
+gspread_dataframe
+#hashlib
