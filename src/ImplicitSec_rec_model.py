@@ -7,6 +7,7 @@ from spotlight.evaluation import sequence_mrr_score
 import numpy as np
 import torch  # to save the model. Backbone done in torch.
 import pandas as pd
+from feedback_retrain_models import *
 
 
 def load_data_to_sequences(variant = '20M', 
@@ -34,7 +35,7 @@ def load_data_to_sequences(variant = '20M',
     random_state = np.random.RandomState(100)
     dataset = get_movielens_dataset(variant=variant)
     if retrain: 
-        dataset =  add_feedback_to_retrain(username)
+        dataset = add_feedback_to_retrain(username)
     if df_split:
         train, test = user_based_train_test_split(dataset,
                                                 random_state=random_state)
