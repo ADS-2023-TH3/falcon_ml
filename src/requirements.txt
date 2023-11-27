@@ -9,3 +9,8 @@ urllib3
 h5py
 torch
 mlflow
+oauth2client
+PyOpenSSL
+gspread
+gspread_dataframe
+
