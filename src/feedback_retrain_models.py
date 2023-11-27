@@ -1,5 +1,6 @@
 import pandas as pd
 from spotlight.datasets.movielens import get_movielens_dataset
+from writing_functions import connect_to_sheet
 def add_feedback_to_retrain(username):
     """
     Adds user feedback to the MovieLens dataset for retraining purposes.
@@ -19,7 +20,12 @@ def add_feedback_to_retrain(username):
     df = pd.DataFrame({'item_ids':item_ids,'ratings':ratings})
 
     # read feedback dataset
-    feedback = pd.read_csv('../Data/fake_feedback.csv')
+    feedback = connect_to_sheet('feedback_sheet')
+    feedback = feedback.get_all_values()
+    feedback = pd.DataFrame(feedback[1:], columns=feedback[0])
+
+    # read fake feedback dataset
+    #feedback = pd.read_csv('../Data/fake_feedback.csv')
 
     # read dataset with title, item_ids and genre
     complete_df = pd.read_csv('../Data/movies.csv')
@@ -39,4 +45,3 @@ def add_feedback_to_retrain(username):
     final_df = pd.concat([df, input_movies_ids], ignore_index=True)
 
     return final_df
-
