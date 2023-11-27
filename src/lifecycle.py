@@ -56,9 +56,9 @@ mlflow.set_experiment(experiment_name)
 train, test = load_data_to_sequences(df_split=True)
 
 # Set parameters
-n_iter = 3
-representation = 'cnn'
-loss = 'bpr'
+n_iter = 7
+representation = 'lstm'
+loss = 'hinge'
 
 # Create model
 model = ImplicitSequenceModel(n_iter=n_iter,
@@ -66,7 +66,7 @@ model = ImplicitSequenceModel(n_iter=n_iter,
                               loss=loss)
 print("Fitting the model...")
 # Train the model
-model.fit(train)
+model.fit(train, verbose=True)
 print("Computing MRR...")
 # Evaluate the model
 mrr_list = sequence_mrr_score(model, test)
@@ -78,8 +78,6 @@ with mlflow.start_run():
     mlflow.log_param("representation", representation)
     mlflow.log_param("loss", loss)
 
-    # Log the model
-    mlflow.sklearn.log_model(model, "model")
 
     # Log the mean of MRR scores
     mlflow.log_metric("mrr_mean", mrr_mean)
