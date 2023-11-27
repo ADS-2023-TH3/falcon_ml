@@ -58,5 +58,5 @@ def retrain_model(username):
     pickle.dump(model_topop, file)
   
   new_df_s = load_data_to_sequences(retrain = True, username = username,  add_feedback_to_retrain =  add_feedback_to_retrain)
-  model_s = train_ImplicitSec_model(new_df_s, filename = '../trained_models/ImplicitSec_rec_model_'+username+'.pth')
+  model_s = train_ImplicitSec_model(new_df_s, filename = '../trained_models/ImplicitSec_rec_model_'+username)
   
