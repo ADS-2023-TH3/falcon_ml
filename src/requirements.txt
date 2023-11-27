@@ -11,4 +11,5 @@ torch
 oauth2client
 PyOpenSSL
 gspread
+gspread_dataframe
 #hashlib

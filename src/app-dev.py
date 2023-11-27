@@ -6,11 +6,6 @@ import torch
 
 from writing_functions import *
 
-SCOPES = [
-'https://www.googleapis.com/auth/spreadsheets',
-'https://www.googleapis.com/auth/drive'
-]
-
 
 def main():
     st.title('Movie Recommender') 
@@ -69,7 +64,18 @@ def main():
 
         imp_sec_model = torch.load('../trained_models/ImplicitSec_rec_model.pth')      
 
-        with st.form("my_form"):
+
+        # Display the last 5 movies rated by the user if there are any and is requested by the user
+        if len(st.session_state.user_ratings) >= 5:
+            with st.form("user_ratings_form"):
+                st.subheader("Your last 5 ratings")
+                submitted_1 = st.form_submit_button("Show ratings")
+                if submitted_1:
+                    display_movies_with_sliders(list(st.session_state.user_ratings.keys())[-5:], st.session_state.user_ratings)
+
+
+        with st.form("recommender_form"):
+            st.subheader("Recommender")
             selected_movies = st.multiselect("Choose Movies", movies)
             selected_genre = st.selectbox("Genre", genres)
 
@@ -147,14 +153,17 @@ def main():
             
     
 
-def display_movies_with_sliders(movies):
+def display_movies_with_sliders(movies, ratings=None):
     # Display movies in a table with sliders for ratings using st.beta_columns
     for movie in movies:
         col1, col2 = st.columns(2)
         with col1:
             st.write(movie)
         with col2:
-            rating = st.slider(f"Share your personal rating", 0, 5, 0, key=f"rating_{movie}")
+            if ratings is not None:
+                rating = st.slider(f"Share your personal rating", 0, 5, int(ratings[movie]), key=f"rating_{movie}")
+            else:
+                rating = st.slider(f"Share your personal rating", 0, 5, 0, key=f"rating_{movie}")
             if rating > 0:
                 st.session_state.ratings[movie] = rating
 
