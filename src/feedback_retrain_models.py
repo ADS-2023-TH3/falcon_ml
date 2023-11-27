@@ -1,6 +1,10 @@
 import pandas as pd
 from spotlight.datasets.movielens import get_movielens_dataset
-def add_feedback_to_retrain(username):
+import pickle
+from popular_rec_model import *
+from ImplicitSec_rec_model import *
+
+def add_feedback_to_retrain(username):    
     """
     Adds user feedback to the MovieLens dataset for retraining purposes.
 
@@ -40,3 +44,19 @@ def add_feedback_to_retrain(username):
 
     return final_df
 
+def retrain_model(username):
+  """This function retrains the models with the new dataset 
+
+  Args:
+      userename (str): The username for which feedback should be added and retrained.
+
+  """
+  new_df = add_feedback_to_retrain(username) 
+  model_topop = TopPopRecommender()
+  model_topop.fit(new_df)
+  with open('../trained_models/popular_rec_model_'+username+'.pkl', 'wb') as file:
+    pickle.dump(model_topop, file)
+  
+  new_df_s = load_data_to_sequences(retrain = True, username = username,  add_feedback_to_retrain =  add_feedback_to_retrain)
+  model_s = train_ImplicitSec_model(new_df_s, filename = '../trained_models/ImplicitSec_rec_model_'+username+'.pth')
+  
