@@ -77,9 +77,9 @@ def add_ratings(user, ratings, user_ratings_indices):
         else:
             # If the user has not rated the movie yet, add a new row with the movie and the rating
             data = {
-            "USER": [user],
-            "MOVIE": [movie],
-            "RATING":[ratings[movie]]
+            "Users": [user],
+            "title": [movie],
+            "ratings":[ratings[movie]]
             }
             df = pd.DataFrame(data)
             set_with_dataframe(feedback_worksheet, df, col=1,row=len(feedback_worksheet.get_all_records()) + 2 ,include_column_header=False)
