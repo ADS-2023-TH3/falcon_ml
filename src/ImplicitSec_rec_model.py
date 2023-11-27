@@ -8,10 +8,13 @@ import numpy as np
 import torch  # to save the model. Backbone done in torch.
 import pandas as pd
 
+
 def load_data_to_sequences(variant = '20M', 
                             max_sequence_length = 200,
                             min_sequence_length = 20,
-                            step_size = 200, df_split = False):
+                            step_size = 200, df_split = False, 
+                            retrain = False, username = None, 
+                             add_feedback_to_retrain = None):
     
     """This functions loads the movielens dataset from the spotlight package
     
@@ -30,6 +33,8 @@ def load_data_to_sequences(variant = '20M',
     """
     random_state = np.random.RandomState(100)
     dataset = get_movielens_dataset(variant=variant)
+    if retrain: 
+        dataset =  add_feedback_to_retrain(username)
     if df_split:
         train, test = user_based_train_test_split(dataset,
                                                 random_state=random_state)
@@ -48,7 +53,7 @@ def load_data_to_sequences(variant = '20M',
                                 step_size=step_size) 
         return dataset
 
-def train_ImplicitSec_model(train, model_type = 'cnn', save_model = True):
+def train_ImplicitSec_model(train, model_type = 'cnn', save_model = True, filename = 'ImplicitSec_rec_model'):
     """Function that trains and saves the recommender model ImplicitSequenceModel() 
 
     Args:
@@ -66,7 +71,7 @@ def train_ImplicitSec_model(train, model_type = 'cnn', save_model = True):
                                   loss='bpr')
     model.fit(train)
     if save_model: 
-        torch.save(model, '../trained_models/ImplicitSec_rec_model.pth')
+        torch.save(model, '../trained_models/'+filename+'.pth')
     
     return model 
 
