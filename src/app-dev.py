@@ -8,7 +8,6 @@ from writing_functions import *
 
 
 def main():
-    # Set page title and initialize session state ------------------------------------------------
     st.title('Movie Recommender') 
         
     # Initialize session state
@@ -26,10 +25,11 @@ def main():
         if submitted:
 
             # Initialize session state
-            st.session_state.times_visualized = 0
+            st.session_state.requested_more_recommendations = 0
             st.session_state.recommendations = []
             st.session_state.more_recommendations = []
             st.session_state.ratings = {}
+            st.session_state.to_remove = None
 
             # Connect to the users sheet
             users_worksheet = connect_to_sheet('users_sheet')
@@ -72,11 +72,16 @@ def main():
                 st.subheader("Your last 5 ratings")
                 submitted_1 = st.form_submit_button("Show ratings")
                 if submitted_1:
-                    display_movies_with_sliders(list(st.session_state.user_ratings.keys())[-5:], st.session_state.user_ratings)
+                    display_movies(list(st.session_state.user_ratings.keys())[-5:], st.session_state.user_ratings)
 
 
-        with st.form("recommender_form"):
-            st.subheader("Recommender")
+        # Update recommendations list from previous session state ------------------------------------
+        if st.session_state.to_remove != None:
+            st.session_state.recommendations.remove(st.session_state.to_remove)
+            st.session_state.to_remove = None
+
+        # Preferences form ---------------------------------------------------------------------------
+        with st.form("my_form"):
             selected_movies = st.multiselect("Choose Movies", movies)
             selected_genre = st.selectbox("Genre", genres)
 
@@ -85,7 +90,7 @@ def main():
             submitted = st.form_submit_button("Submit")
 
             if submitted:
-                st.session_state.times_visualized = 1   # Reset times_visualized
+                st.session_state.requested_more_recommendations = 0   # Reset requested_more_recommendations
                 st.session_state.recommendations = []   # Reset recommendations
                 st.session_state.more_recommendations = []   # Reset more_recommendations
 
@@ -108,33 +113,50 @@ def main():
                     # Give the prediction
                     movie_id_recommendations = predict(model=imp_sec_model, input_movie_ids=input_movies_ids,
                                                     genres_df = data,genre=selected_genre,at=100)
-                    
-                    st.session_state.recommendations = from_id_to_title(movie_id_recommendations, data)
-
+                    if len(movie_id_recommendations) == 0:
+                        st.session_state.recommendations = ["There are no available recommendations for the selected preferences"]
+                    else:
+                        st.session_state.recommendations = from_id_to_title(movie_id_recommendations, data)
+        # --------------------------------------------------------------------------------------------
+        # Display output -----------------------------------------------------------------------------
         if len(st.session_state.recommendations) > 0:   # Display recommendations obtained from the form
             st.subheader("Top 5 movies for your preferences")
-            display_movies_with_sliders(st.session_state.recommendations[0:5])
+            if st.session_state.recommendations[0] == "There are no available recommendations for the selected preferences":
+                st.text("There are no available recommendations for the selected preferences")
+            else:
+                display_movies(st.session_state.recommendations[0:5])
+        # --------------------------------------------------------------------------------------------
 
-        if len(st.session_state.recommendations)-5 > 0:   # The recommendations are more than 5
+        # More recommendations form ------------------------------------------------------------------
+        if len(st.session_state.recommendations) > 5 or st.session_state.requested_more_recommendations > 0:   # The recommendations are more than 5        
             with st.form("more_recommendations_form"):
                 st.subheader('More recommendations for the same preferences')
                 
                 submitted_2 = st.form_submit_button("More recommendations")
                     
                 if submitted_2:
-                    if (st.session_state.times_visualized) * 5 < len(st.session_state.recommendations):   # If there are some recommendations left
-                        if (st.session_state.times_visualized + 1) * 5 < len(st.session_state.recommendations):
-                            st.session_state.more_recommendations = st.session_state.recommendations[st.session_state.times_visualized * 5:(st.session_state.times_visualized + 1) * 5]
-                        else:   # If there are less than 5 recommendations left
-                            st.session_state.more_recommendations = st.session_state.recommendations[st.session_state.times_visualized * 5:]
+                    if st.session_state.requested_more_recommendations > 0:   # The user has already requested more recommendations
+                        # Remove the current movies in the more_recommendations list
+                        del st.session_state.recommendations[5:10]
                         
-                        st.session_state.times_visualized += 1
-                    else:
-                        st.session_state.more_recommendations = []
-                        st.text("There are no more recommendations. Please select new movies or a new genre")
+                    st.session_state.requested_more_recommendations += 1           
+        # --------------------------------------------------------------------------------------------
+        # Update more_recommendations independently of the form --------------------------------------
+        if len(st.session_state.recommendations) > 5:   # The user has already requested more recommendations
+            # Update the more_recommendations list
+            if len(st.session_state.recommendations[5:]) > 5:   # If there are more than 5 recommendations left
+                st.session_state.more_recommendations = st.session_state.recommendations[5:10]
+            else:   # If there are less than 5 recommendations left
+                st.session_state.more_recommendations = st.session_state.recommendations[5:]
+        elif st.session_state.requested_more_recommendations > 0:
+            st.session_state.more_recommendations = []
+            st.write("There are no more recommendations. Please select new movies or a new genre")
 
-        if len(st.session_state.more_recommendations) > 0:   # Display more recommendations obtained from the form
-            display_movies_with_sliders(st.session_state.more_recommendations)
+        # --------------------------------------------------------------------------------------------
+        # Display output -----------------------------------------------------------------------------
+        if st.session_state.requested_more_recommendations > 0:   # Display more recommendations obtained from the form
+            display_movies(st.session_state.more_recommendations)
+        # --------------------------------------------------------------------------------------------
 
         print('session_ratings: ', st.session_state.ratings)
         print('user_ratings: ', st.session_state.user_ratings)
@@ -153,22 +175,22 @@ def main():
 
             
     
-
-def display_movies_with_sliders(movies, ratings=None):
+def display_movies(movies, ratings=None):
     # Display movies in a table with sliders for ratings using st.beta_columns
     for movie in movies:
         col1, col2 = st.columns(2)
         with col1:
             st.write(movie)
-            col11, col12 = st.columns(2)
-            with col11:
-                replace = st.button("Replace suggestion", key=f"replace_{movie}")
-            if replace:
-                if movie in st.session_state.recommendations:
-                    st.session_state.to_remove = movie
-                    #st.session_state.recommendations.remove(movie)
-                with col12:
-                    confirm = st.button("Confirm", key=f"confirm_{movie}")
+            if ratings is None:
+                col11, col12 = st.columns(2)
+                with col11:
+                    replace = st.button("Replace suggestion", key=f"replace_{movie}")
+                if replace:
+                    if movie in st.session_state.recommendations:
+                        st.session_state.to_remove = movie
+                        #st.session_state.recommendations.remove(movie)
+                    with col12:
+                        confirm = st.button("Confirm", key=f"confirm_{movie}")
         with col2:
             if ratings is not None:
                 rating = st.slider(f"Share your personal rating", 0, 5, int(ratings[movie]), key=f"rating_{movie}")
@@ -176,8 +198,6 @@ def display_movies_with_sliders(movies, ratings=None):
                 rating = st.slider(f"Share your personal rating", 0, 5, 0, key=f"rating_{movie}")
             if rating > 0:
                 st.session_state.ratings[movie] = rating
-
-
 
 def user_ratings(username):
     feedback_worksheet = connect_to_sheet('feedback_sheet')
@@ -195,7 +215,6 @@ def user_ratings(username):
         user_ratings_dict_indices = dict(zip(movies, indices))
 
     return user_ratings_dict, user_ratings_dict_indices
-
 
 import hashlib
 def make_hashes(password):
