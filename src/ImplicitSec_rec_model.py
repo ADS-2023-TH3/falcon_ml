@@ -54,6 +54,7 @@ def load_data_to_sequences(variant = '20M',
                                 step_size=step_size) 
         return dataset
 
+
 def train_ImplicitSec_model(train, model_type = 'cnn', save_model = True, filename = 'ImplicitSec_rec_model'):
     """Function that trains and saves the recommender model ImplicitSequenceModel() 
 
@@ -67,9 +68,9 @@ def train_ImplicitSec_model(train, model_type = 'cnn', save_model = True, filena
     Returns:
         model (spotlight.sequence.implicit.ImplicitSequenceModel): trained model
     """
-    model = ImplicitSequenceModel(n_iter=3,
+    model = ImplicitSequenceModel(n_iter=7,
                                   representation=model_type,
-                                  loss='bpr')
+                                  loss='hinge')
     model.fit(train)
     if save_model: 
         torch.save(model, '../trained_models/'+filename+'.pth')

@@ -3,6 +3,7 @@ from spotlight.datasets.movielens import get_movielens_dataset
 import pickle
 from popular_rec_model import *
 from ImplicitSec_rec_model import *
+from writing_functions import connect_to_sheet
 
 def add_feedback_to_retrain(username):    
     """
@@ -23,7 +24,12 @@ def add_feedback_to_retrain(username):
     df = pd.DataFrame({'item_ids':item_ids,'ratings':ratings})
 
     # read feedback dataset
-    feedback = pd.read_csv('../Data/fake_feedback.csv')
+    feedback = connect_to_sheet('feedback_sheet')
+    feedback = feedback.get_all_values()
+    feedback = pd.DataFrame(feedback[1:], columns=feedback[0])
+
+    # read fake feedback dataset
+    #feedback = pd.read_csv('../Data/fake_feedback.csv')
 
     # read dataset with title, item_ids and genre
     complete_df = pd.read_csv('../Data/movies.csv')
@@ -59,4 +65,3 @@ def retrain_model(username):
   
   new_df_s = load_data_to_sequences(retrain = True, username = username,  add_feedback_to_retrain =  add_feedback_to_retrain)
   model_s = train_ImplicitSec_model(new_df_s, filename = '../trained_models/ImplicitSec_rec_model_'+username)
-  
