@@ -25,6 +25,12 @@ RUN pip3 install --upgrade pip \
     && cd falcon_ml/src  \
     && pip3 install -r requirements.txt
 
+RUN pip3 install mlflow
+RUN pip3 install oauth2client
+RUN pip3 install PyOpenSSL
+RUN pip3 install gspread
+RUN pip3 install gspread_dataframe
+
 # Install spotlight
 RUN git clone https://github.com/maciejkula/spotlight.git \
     && cd spotlight \
