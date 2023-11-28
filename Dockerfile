@@ -21,9 +21,9 @@ RUN apt-get update && apt-get install -y python3.9 python3-pip
 RUN git clone https://github.com/ADS-2023-TH3/falcon_ml.git
 
 # Install requirements
-RUN pip install --upgrade pip \
+RUN pip3 install --upgrade pip \
     && cd falcon_ml/src  \
-    && pip install -r requirements.txt
+    && pip3 install -r requirements.txt
 
 # Install spotlight
 RUN git clone https://github.com/maciejkula/spotlight.git \
