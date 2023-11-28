@@ -64,3 +64,6 @@ RUN sudo apt update && sudo apt-get install -y tmux wget
 # Set the working directory in the container
 ENV PROJECT_PATH=/home/${USER_NAME}/falcon_ml
 WORKDIR $PROJECT_PATH
+
+# Run the application
+CMD ["streamlit", "run", "falcon_ml/app-dev.py"]
