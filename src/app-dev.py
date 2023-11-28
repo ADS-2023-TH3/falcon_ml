@@ -8,6 +8,7 @@ from writing_functions import *
 
 
 def main():
+    # Set page title and initialize session state ------------------------------------------------
     st.title('Movie Recommender') 
         
     # Initialize session state
@@ -159,6 +160,15 @@ def display_movies_with_sliders(movies, ratings=None):
         col1, col2 = st.columns(2)
         with col1:
             st.write(movie)
+            col11, col12 = st.columns(2)
+            with col11:
+                replace = st.button("Replace suggestion", key=f"replace_{movie}")
+            if replace:
+                if movie in st.session_state.recommendations:
+                    st.session_state.to_remove = movie
+                    #st.session_state.recommendations.remove(movie)
+                with col12:
+                    confirm = st.button("Confirm", key=f"confirm_{movie}")
         with col2:
             if ratings is not None:
                 rating = st.slider(f"Share your personal rating", 0, 5, int(ratings[movie]), key=f"rating_{movie}")
