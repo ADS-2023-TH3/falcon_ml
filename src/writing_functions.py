@@ -83,3 +83,15 @@ def add_ratings(user, ratings, user_ratings_indices):
             }
             df = pd.DataFrame(data)
             set_with_dataframe(feedback_worksheet, df, col=1,row=len(feedback_worksheet.get_all_records()) + 2 ,include_column_header=False)
+
+def mean_ratings_films():
+    df = pd.read_csv('../Data/ratings.csv')
+    mean_ratings = df.groupby('movieId')['rating'].mean()
+    mean_ratings = mean_ratings.round().astype(int)
+    return mean_ratings
+
+def ordered_ratings_films(recommended_id):
+    mean_ratings = mean_ratings_films()
+    selected_ratings = mean_ratings[mean_ratings.index.isin(recommended_id)]
+    selected_ratings= selected_ratings.sort_index(key=lambda x: x.map({v: i for i, v in enumerate(recommended_id)}))
+    return selected_ratings
