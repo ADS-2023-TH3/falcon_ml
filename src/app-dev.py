@@ -3,6 +3,7 @@ import pandas as pd
 from popular_rec_model import *
 from ImplicitSec_rec_model import *
 import torch
+import urllib.parse
 
 from writing_functions import *
 
@@ -103,7 +104,8 @@ def main():
                     else:
                         # Popular recommender
                         movie_id_recommendations = popul_model.predict(genre=selected_genre, at=100)
-                        st.session_state.recommendations = from_id_to_title(movie_id_recommendations, data)
+                        st.session_state.recommendations = movies_with_ratings_from_ids(movie_id_recommendations, data)
+                        #st.session_state.recommendations = from_id_to_title(movie_id_recommendations, data)
                 else:
                     # Spotlight recommender
                     # Convert title to item_id
@@ -116,7 +118,8 @@ def main():
                     if len(movie_id_recommendations) == 0:
                         st.session_state.recommendations = ["There are no available recommendations for the selected preferences"]
                     else:
-                        st.session_state.recommendations = from_id_to_title(movie_id_recommendations, data)
+                        st.session_state.recommendations = movies_with_ratings_from_ids(movie_id_recommendations, data)
+                        #st.session_state.recommendations = from_id_to_title(movie_id_recommendations, data)
         # --------------------------------------------------------------------------------------------
         # Display output -----------------------------------------------------------------------------
         if len(st.session_state.recommendations) > 0:   # Display recommendations obtained from the form
@@ -173,31 +176,48 @@ def main():
                     st.session_state.user_ratings, st.session_state.user_ratings_indices = user_ratings(st.session_state.username)
                     st.success("Ratings submitted successfully")
 
-            
+def movies_with_ratings_from_ids(movie_ids, data):
+    recommendations_with_ratings = []
+    movie_titles = from_id_to_title(movie_ids, data)
+    ratings = ordered_ratings_films(movie_ids)
+    
+    for movie, rating in zip(movie_titles, ratings):
+        movie_info = {'title': movie, 'rating': rating}
+        recommendations_with_ratings.append(movie_info)
+    
+    return recommendations_with_ratings
     
 def display_movies(movies, ratings=None):
     # Display movies in a table with sliders for ratings using st.beta_columns
     for movie in movies:
         col1, col2 = st.columns(2)
         with col1:
-            st.write(movie)
+            imdb_url = imdb_search_url(movie['title'])
+            st.write(movie['title'], f"[[IMDb]]({imdb_url})")
             if ratings is None:
                 col11, col12 = st.columns(2)
                 with col11:
-                    replace = st.button("Replace suggestion", key=f"replace_{movie}")
+                    replace = st.button("Replace suggestion", key=f"replace_{movie['title']}")
                 if replace:
                     if movie in st.session_state.recommendations:
                         st.session_state.to_remove = movie
                         #st.session_state.recommendations.remove(movie)
                     with col12:
-                        confirm = st.button("Confirm", key=f"confirm_{movie}")
+                        confirm = st.button("Confirm", key=f"confirm_{movie['title']}")
         with col2:
             if ratings is not None:
-                rating = st.slider(f"Share your personal rating", 0, 5, int(ratings[movie]), key=f"rating_{movie}")
+                 rating = st.slider(f"Share your personal rating, [Our rating: {get_star_html(movie['rating'])}]", 0, 5, int(ratings[movie['title']]), key=f"rating_{movie['title']}")
             else:
-                rating = st.slider(f"Share your personal rating", 0, 5, 0, key=f"rating_{movie}")
+                rating = st.slider(f"Share your personal rating, [Our rating: {get_star_html(movie['rating'])}]", 0, 5, 0, key=f"rating_{movie['title']}")
             if rating > 0:
-                st.session_state.ratings[movie] = rating
+                st.session_state.ratings[movie['title']] = rating
+
+def get_star_html(rating):
+    # Create HTML string for star rating display with red color
+    stars = int(rating)
+    red_star_html = ':star:'
+    star_html = red_star_html * stars
+    return star_html
 
 def user_ratings(username):
     feedback_worksheet = connect_to_sheet('feedback_sheet')
@@ -215,6 +235,11 @@ def user_ratings(username):
         user_ratings_dict_indices = dict(zip(movies, indices))
 
     return user_ratings_dict, user_ratings_dict_indices
+
+def imdb_search_url(movie_title):
+    base_url = "https://www.imdb.com/find?q="
+    encoded_title = urllib.parse.quote_plus(movie_title)
+    return f"{base_url}{encoded_title}"
 
 import hashlib
 def make_hashes(password):
