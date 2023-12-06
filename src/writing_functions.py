@@ -89,6 +89,3 @@ def load_movies_data():
     ws = connect_to_sheet('movies_sheet')
     df = Sheet_to_df(ws)
     return df
-
-df = load_movies_data()
-print(df.columns)
