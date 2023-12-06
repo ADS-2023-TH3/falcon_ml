@@ -83,3 +83,12 @@ def add_ratings(user, ratings, user_ratings_indices):
             }
             df = pd.DataFrame(data)
             set_with_dataframe(feedback_worksheet, df, col=1,row=len(feedback_worksheet.get_all_records()) + 2 ,include_column_header=False)
+
+
+def load_movies_data():
+    ws = connect_to_sheet('movies_sheet')
+    df = Sheet_to_df(ws)
+    return df
+
+df = load_movies_data()
+print(df.columns)
