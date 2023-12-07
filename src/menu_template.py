@@ -27,6 +27,8 @@ def main():
         popul_model = pd.read_pickle(file)
 
     imp_sec_model = torch.load('/falcon_ml/trained_models/ImplicitSec_rec_model.pth')
+
+    #LOGIN PAGE 
     def login_page():
         with st.form("login_form"):
             username = st.text_input("Username")
@@ -62,7 +64,8 @@ def main():
                 else:
                     st.error("Incorrect username or password")
                     st.session_state.success = False
-        
+
+    #Recommender page   
     def recommender_page():
         st.header('this is the recommender')
         # Update recommendations list from previous session state ------------------------------------
@@ -168,7 +171,7 @@ def main():
                         st.session_state.username)
                     st.success("Ratings submitted successfully")
 
-
+    #Page to 
     def history_page():
         if st.session_state.success == True:
                     # Display the last 5 movies rated by the user if there are any and is requested by the user
@@ -180,7 +183,7 @@ def main():
                         display_movies(list(st.session_state.user_ratings.keys())[-5:], st.session_state.user_ratings)
 
         else:
-            st.write('please log in to see your history')
+            st.write('Please log in to see your history')
     pages={"Log In": login_page,
             "Recommender" : recommender_page,
             "History" : history_page}
