@@ -95,3 +95,9 @@ def ordered_ratings_films(recommended_id):
     selected_ratings = mean_ratings[mean_ratings.index.isin(recommended_id)]
     selected_ratings= selected_ratings.sort_index(key=lambda x: x.map({v: i for i, v in enumerate(recommended_id)}))
     return selected_ratings
+
+
+def load_movies_data():
+    ws = connect_to_sheet('movies_sheet')
+    df = Sheet_to_df(ws)
+    return df
