@@ -16,17 +16,17 @@ def main():
 
     # Login form
     # TODO: improve it with https://blog.jcharistech.com/2020/05/30/how-to-add-a-login-section-to-streamlit-blog-app/
-    data = pd.read_csv('/falcon_ml/Data/movies.csv')
+    data = pd.read_csv('../Data/movies.csv')
     movies = data['title'].values
     genres = ['', 'Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama',
                 'Fantasy',
                 'Film-Noir', 'Horror', 'IMAX', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War',
                 'Western']
 
-    with open('/falcon_ml/trained_models/popular_rec_model.pkl', 'rb') as file:
+    with open('../trained_models/popular_rec_model.pkl', 'rb') as file:
         popul_model = pd.read_pickle(file)
 
-    imp_sec_model = torch.load('/falcon_ml/trained_models/ImplicitSec_rec_model.pth')
+    imp_sec_model = torch.load('../trained_models/ImplicitSec_rec_model.pth')      
 
     #LOGIN PAGE 
     def login_page():
@@ -184,6 +184,7 @@ def main():
 
         else:
             st.write('Please log in to see your history')
+    
     pages={"Log In": login_page,
             "Recommender" : recommender_page,
             "History" : history_page}
@@ -191,6 +192,7 @@ def main():
     pages[selected_page]()
     
 
+# Additional functions
 def display_movies(movies, ratings=None):
     # Display movies in a table with sliders for ratings using st.beta_columns
     for movie in movies:
