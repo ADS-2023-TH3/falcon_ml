@@ -185,9 +185,10 @@ def main():
             if len(st.session_state.user_ratings) >= 5:
                 with st.form("user_ratings_form"):
                     st.subheader("Your last 5 ratings")
-                    submitted_1 = st.form_submit_button("Show ratings")
+                    submitted_1 = st.form_submit_button("Show ratings") 
                     if submitted_1:
-                        display_movies(list(st.session_state.user_ratings)[-5:], st.session_state.user_ratings)
+                        # TODO: bug fix, pass the list of dictionaries for the movies, instead of just the list of titles
+                        display_movies(list(st.session_state.user_ratings.key())[-5:], st.session_state.user_ratings)
             else:
                 st.write("You have not rated any movies yet")
         else:
