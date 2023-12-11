@@ -6,11 +6,14 @@ import torch
 import urllib.parse
 
 from writing_functions import *
-
+import base64
 
 def main():
-    st.title('Falcon_ml Movie Recommender') 
-        
+    set_background('banner-1.png')
+
+
+    # Display the image
+    st.image('falcon.png', width=700)
     # Initialize session state
     if 'success' not in st.session_state:
         st.session_state.success = False
@@ -197,7 +200,7 @@ def main():
             """
             ## Introduction
 
-            Welcome to Falcon ML, an exciting movie recommender web app developed by a dedicated team of seven individuals as part of an Agile Data Science course at [University Name]. Falcon ML is designed to provide personalized movie recommendations based on user preferences, utilizing state-of-the-art machine learning algorithms to enhance the movie-watching experience.
+            Welcome to Falcon ML, an exciting movie recommender web app developed by a dedicated team of seven individuals as part of an Agile Data Science course at University of Barcelona. Falcon ML is designed to provide personalized movie recommendations based on user preferences, utilizing state-of-the-art machine learning algorithms to enhance the movie-watching experience.
 
             ## Project Overview
 
@@ -219,13 +222,13 @@ def main():
 
             Our talented team of seven members has collaborated to bring Falcon ML to life. Each team member contributes their unique skills and expertise, fostering a collaborative environment for innovation and success.
 
-            - [Team Member 1]
-            - [Team Member 2]
-            - [Team Member 3]
-            - [Team Member 4]
-            - [Team Member 5]
-            - [Team Member 6]
-            - [Team Member 7]
+            - [Leonardo Bocchi](https://github.com/leobcc)
+            - [Carmen Casas](https://github.com/ccasash)
+            - [Flàvia Ferrús](https://github.com/flaviaferrus)
+            - [Arturo Fredes](https://github.com/arturofredes)
+            - [Àlex Pujol](https://github.com/alex-pv01)
+            - [David Rosado](https://github.com/davidrosado4)
+            - [Jaume Sanchez](https://github.com/jshz12)
 
             ## Technologies Used
 
@@ -238,7 +241,7 @@ def main():
 
             ## Feedback and Contributions
 
-            We value your feedback! Falcon ML is an ongoing project, and we welcome contributions, suggestions, and bug reports from the community. Feel free to reach out to us through [GitHub Issues](https://github.com/yourusername/falcon_ml/issues) or join our [Discussions](https://github.com/yourusername/falcon_ml/discussions) to share your thoughts.
+            We value your feedback! Falcon ML is an ongoing project, and we welcome contributions, suggestions, and bug reports from the community. Feel free to reach out to us through [GitHub Issues](https://github.com/ADS-2023-TH3/falcon_ml/issues) to share your thoughts.
 
             Thank you for exploring Falcon ML – your go-to movie recommender for a personalized cinematic journey!
             """
@@ -253,45 +256,33 @@ def main():
 
         st.header("Meet the Team")
 
-        st.subheader("1. Team Lead: John Doe")
+        st.subheader("1. Scrum Master: Carmen Casas")
         st.write(
-            "John Doe is an enthusiastic data scientist with a keen interest in machine learning and recommender systems. "
-            "As the team lead, he provides guidance and ensures smooth collaboration among team members."
+            "Carmen is an enthusiastic data scientist with a keen interest in machine learning and recommender systems. "
+            "As the Scrum Master, she provides guidance and ensures smooth collaboration among team members."
         )
 
-        st.subheader("2. Data Scientist: Jane Smith")
+        st.subheader("2. Data Scientists: Flàvia Ferrús & David Rosado")
         st.write(
-            "Jane Smith is a skilled data scientist specializing in data preprocessing and feature engineering. "
-            "She plays a key role in preparing and analyzing the dataset for the recommender system."
+            "Flàvia and David possess expertise in data science, with a focus on data preprocessing and feature engineering. "
+            "They play a crucial role in preparing and analyzing the dataset for the recommender system, as well as selecting the optimal model for training it."
         )
 
-        st.subheader("3. Frontend Developer: Alex Johnson")
+        st.subheader("3. Frontend Developer: Leonardo Bocchi")
         st.write(
-            "Alex Johnson is an experienced frontend developer responsible for creating an engaging and user-friendly web interface. "
+            "Leonardo is an experienced frontend developer responsible for creating an engaging and user-friendly web interface. "
             "He focuses on building a seamless user experience for Falcon ML."
         )
 
-        st.subheader("4. Backend Developer: Emily Williams")
+        st.subheader("4. Backend Developers: Arturo Fredes & Jaume Sanchez")
         st.write(
-            "Emily Williams is a backend developer with expertise in building scalable and efficient server-side components. "
-            "She ensures the backend of Falcon ML operates smoothly and handles user requests effectively."
+            "Arturo and Jaume are experienced backend developers who specialize in constructing scalable and efficient server-side components."
+            "They ensure the backend of Falcon ML operates smoothly and handles user requests effectively."
         )
 
-        st.subheader("5. UX/UI Designer: Michael Brown")
+        st.subheader("5. DevOps Engineer: Àlex Pujol")
         st.write(
-            "Michael Brown is a talented UX/UI designer who works on creating visually appealing and intuitive interfaces. "
-            "He contributes to the overall design and aesthetics of Falcon ML."
-        )
-
-        st.subheader("6. QA Engineer: Sarah Davis")
-        st.write(
-            "Sarah Davis is a dedicated QA engineer responsible for ensuring the reliability and quality of Falcon ML. "
-            "She conducts thorough testing to identify and address any potential issues."
-        )
-
-        st.subheader("7. DevOps Engineer: Robert Wilson")
-        st.write(
-            "Robert Wilson is a skilled DevOps engineer who manages the deployment and infrastructure of Falcon ML. "
+            "Àlex is a skilled DevOps engineer who manages the deployment and infrastructure of Falcon ML. "
             "He ensures the application runs smoothly and efficiently in a production environment."
         )
 
@@ -325,7 +316,7 @@ def main():
         st.header("GitHub Repository")
 
         st.write(
-            "Our project is hosted on GitHub. You can contribute, report issues, or explore the codebase on our [GitHub repository](https://github.com/yourusername/falcon_ml)."
+            "Our project is hosted on GitHub. You can contribute, report issues, or explore the codebase on our [GitHub repository](https://github.com/ADS-2023-TH3/falcon_ml)."
         )
         st.write(
             "If you encounter any issues or have feature requests, please open an issue on our GitHub repository. Your feedback is important to us, and we appreciate your contributions."
@@ -435,6 +426,24 @@ def check_hashes(password,hashed_text):
 		return True
 	return False
 
+# Background image -----------------------------------------------------------------------------------------
+def get_base64(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+
+def set_background(png_file):
+    bin_str = get_base64(png_file)
+    page_bg_img = '''
+    <style>
+    .stApp {
+    background-image: url("data:image/png;base64,%s");
+    background-size: cover;
+    }
+    </style>
+    ''' % bin_str
+    st.markdown(page_bg_img, unsafe_allow_html=True)
 
 if __name__ == '__main__':
     main()
