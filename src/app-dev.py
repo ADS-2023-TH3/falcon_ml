@@ -187,7 +187,7 @@ def main():
                     st.subheader("Your last 5 ratings")
                     submitted_1 = st.form_submit_button("Show ratings")
                     if submitted_1:
-                        display_movies(list(st.session_state.user_ratings.keys())[-5:], st.session_state.user_ratings)
+                        display_movies(list(st.session_state.user_ratings)[-5:], st.session_state.user_ratings)
             else:
                 st.write("You have not rated any movies yet")
         else:
