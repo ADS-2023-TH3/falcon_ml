@@ -9,7 +9,7 @@ from gspread_dataframe import set_with_dataframe
 def connect_to_sheet(worksheet_name):
     # Define the scope and credentials
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    credentials = ServiceAccountCredentials.from_json_keyfile_name("movierecommender-405816-41309bde9020.json", scope)
+    credentials = ServiceAccountCredentials.from_json_keyfile_name("/falcon_ml/src/movierecommender-405816-41309bde9020.json", scope)
     file_id = '1aJPqNvbLqZg1N1iyx6IrGVYxgKypDhRwgfY3Xkw-I4o'
     # Authenticate with Google Sheets
     gc = gspread.authorize(credentials)
@@ -85,7 +85,7 @@ def add_ratings(user, ratings, user_ratings_indices):
             set_with_dataframe(feedback_worksheet, df, col=1,row=len(feedback_worksheet.get_all_records()) + 2 ,include_column_header=False)
 
 def mean_ratings_films():
-    df = pd.read_csv('../Data/ratings.csv')
+    df = pd.read_csv('/falcon_ml/Data/ratings.csv')
     mean_ratings = df.groupby('movieId')['rating'].mean()
     mean_ratings = mean_ratings.round().astype(int)
     return mean_ratings
