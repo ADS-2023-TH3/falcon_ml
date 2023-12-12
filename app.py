@@ -11,11 +11,11 @@ from writing_functions import *
 import base64
 
 def main():
-    set_background('banner-1.png')
+    set_background('/falcon_ml/assets/banner-1.png')
 
 
     # Display the image
-    st.image('falcon.png', width=700)
+    st.image('/falcon_ml/assets/falcon.png', width=700)
     # Initialize session state
     if 'success' not in st.session_state:
         st.session_state.success = False
