@@ -14,7 +14,7 @@ def load_data_to_sequences(variant = '20M',
                             min_sequence_length = 20,
                             step_size = 200, df_split = False, 
                             retrain = False, username = None, 
-                             add_feedback_to_retrain = None):
+                            add_feedback_to_retrain = None):
     
     """This functions loads the movielens dataset from the spotlight package
     
@@ -22,21 +22,40 @@ def load_data_to_sequences(variant = '20M',
         variant (str) : Parameter specifying the desired variant of the movielens
                         dataset. '20M' by default. 
                         Possible variant inputs: '100K','1M','10M','20M'
+                        Used to get a <class 'spotlight.interactions.Interactions'>
         max_sequence_length (int) = 200 by default.
         min_sequence_length (int) = 20 by default.
         step_size (int) = 200 by default.
         df_split (boolean): False by default. Determines whether the train/test split is conducted
+        
+        if retraining the model with the feedback dataset: 
+        retrain = True,
+        username (str) username of the user we are training the model for 
+        add_feedback_to_retrain (function) getting the username and returning dataset 
     Returns:
         train (sequence)
-        test (sequence) 
-        
+        test (sequence)   
     """
     random_state = np.random.RandomState(100)
-    dataset = get_movielens_dataset(variant=variant)
-    if retrain: 
-        dataset = add_feedback_to_retrain(username)
+    
+    if retrain:
+        ## Here we are getting a pd.Dataframe, instead of a <class 'spotlight.interactions.Interactions'> 
+        df = add_feedback_to_retrain(username)
+        ## We need transform it into an interaction: 
+        print(type(df))
+        print(df['item_ids'])
+        print(df['user_ids'])
+        print(df.columns)
+        dataset = Interactions(user_ids=df['user_ids'].values, 
+                                item_ids=df['item_ids'].values,
+                                ratings=df['ratings'].values)
+        print(type(dataset))
+    else: 
+        dataset = get_movielens_dataset(variant=variant)
+        
     if df_split:
         train, test = user_based_train_test_split(dataset,
+                                                  test_percentage = 0.2,
                                                 random_state=random_state)
         train = train.to_sequence(max_sequence_length=max_sequence_length,
                                 min_sequence_length=min_sequence_length,
@@ -48,6 +67,7 @@ def load_data_to_sequences(variant = '20M',
         return train, test
     
     else:
+        
         dataset = dataset.to_sequence(max_sequence_length=max_sequence_length,
                                 min_sequence_length=min_sequence_length,
                                 step_size=step_size) 

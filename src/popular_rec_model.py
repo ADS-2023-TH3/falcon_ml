@@ -3,7 +3,7 @@
 from spotlight.datasets.movielens import get_movielens_dataset
 import pandas as pd
 
-def get_merge_data():
+def get_merge_data(retraining = False, feedback_merged_dataset = None):
     """
     Merge data from Spotlight with MovieLens dataset to obtain movie genres.
 
@@ -18,10 +18,13 @@ def get_merge_data():
         df (pd.DataFrame): A DataFrame containing merged data with movie genres.
     """
     # Download the dataset movielens from spotlight
-    dataset = get_movielens_dataset(variant='20M')
-    item_ids = dataset.item_ids
-    ratings = dataset.ratings
-    df = pd.DataFrame({'item_ids':item_ids,'ratings':ratings})
+    if retraining: 
+        df = feedback_merged_dataset
+    else:
+        dataset = get_movielens_dataset(variant='20M')
+        item_ids = dataset.item_ids
+        ratings = dataset.ratings
+        df = pd.DataFrame({'item_ids':item_ids,'ratings':ratings})
 
     # Download movielens dataset to add genres
     genres_df = pd.read_csv('../Data/movies.csv')
