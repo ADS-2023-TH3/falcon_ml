@@ -188,7 +188,11 @@ def main():
                     submitted_1 = st.form_submit_button("Show ratings") 
                     if submitted_1:
                         # TODO: bug fix, pass the list of dictionaries for the movies, instead of just the list of titles
-                        display_movies(list(st.session_state.user_ratings.key())[-5:], st.session_state.user_ratings)
+                        movies = list(st.session_state.user_ratings.keys())[-5:]
+                        movies_dicts = []
+                        for movie in movies:
+                            movies_dicts.append({'title': movie, 'rating': st.session_state.user_ratings[movie]})
+                        display_movies(movies_dicts, st.session_state.user_ratings)
             else:
                 st.write("You have not rated any movies yet")
         else:
