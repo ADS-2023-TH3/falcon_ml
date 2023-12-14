@@ -18,7 +18,7 @@ RUN add-apt-repository ppa:deadsnakes/ppa -y
 RUN apt-get update && apt-get install -y python3.9 python3-pip 
 
 # Clone the repository
-RUN git clone -b front_end_sprint_3 https://github.com/ADS-2023-TH3/falcon_ml.git
+RUN git clone https://github.com/ADS-2023-TH3/falcon_ml.git
 
 # Install requirements
 RUN pip3 install --upgrade pip \
