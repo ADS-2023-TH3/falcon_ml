@@ -1,9 +1,16 @@
 # Movie Recommender Web App
 
-<img width="901" alt="Captura de pantalla 2023-11-13 a las 23 26 35" src="https://github.com/ADS-2023-TH3/falcon_ml/assets/114001733/bd2aabd3-4160-48bd-b656-ee3fb1f1e4b6">
+<div style="text-align:center; margin-bottom:20px;">
+  <img alt="Captura de pantalla 2023-12-14 a las 9 54 42" src="https://github.com/ADS-2023-TH3/falcon_ml/assets/114001733/c19c3b3d-91ea-4b79-88bd-0969811447be" width="900">
+</div>
 
-
+<br><br>
 Welcome to our Movie Recommender Web App! This web application allows users to input a movie title and receive personalized movie recommendations based on our advanced recommendation algorithm. It's powered by cutting-edge data science techniques, making your movie-watching experience even better!
+<br><br>
+<div style="text-align:center; margin-bottom:20px;">
+  <img alt="Captura de pantalla 2023-12-14 a las 9 57 29" src="https://github.com/ADS-2023-TH3/falcon_ml/assets/114001733/a157884e-2538-41e7-ac46-c148ce68aab2" width="900">
+</div>
+<br>
 
 ## Features
 
